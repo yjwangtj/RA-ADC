@@ -1,14 +1,11 @@
 # RA-ADC
-Retrieval-Augmented Autonomous Driving Corner Case Comprehension with Vision-Language Models
-# Project Name
 
 ## Project Overview
+This is a project about **Retrieval-Augmented Autonomous Driving Corner Case Comprehension with Vision-Language Models**, aiming to **mitigate the hallucination phenomenon in VLMs through retrieval-augmented generation**. This project includes the following main features:
 
-This is a project about **Project Name/Description**, aiming to **briefly describe the project goals or purpose**. This project can be used for **specific application scenarios** and includes the following main features:
-
-- **Feature 1**: Brief description of the feature
-- **Feature 2**: Brief description of the feature
-- **Feature 3**: Brief description of the feature
+- **Feature 1**: Embedding of image-text pairs into vector database.
+- **Feature 2**: Retrieving the most similar image with cosine similarity.
+- **Feature 3**: Evaluating generated text with cosine similarity and ROUGE scores.
 
 ## Project Structure
 
@@ -26,7 +23,7 @@ Project Root Directory
 
 ### Prerequisites
 
-- Python >= 3.x
+- Python >= 3.9
 - Other dependencies (list any required tools or libraries)
 
 ### Installation Steps
