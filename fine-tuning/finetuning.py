@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from torchvision import transforms
 from FlagEmbedding import FlagModel
 
-# Load the BLIP model and text model
+
 processor = BlipProcessor.from_pretrained("/home/wyj/blip-image-captioning-base")
 model_image_text = BlipForConditionalGeneration.from_pretrained("/home/wyj/blip-image-captioning-base").to('cuda')
 model_text = FlagModel('/home/wyj/bge-base-en-v1.5',
@@ -17,7 +17,7 @@ model_text = FlagModel('/home/wyj/bge-base-en-v1.5',
                        use_fp16=True)
 
 
-# Dataset definition
+
 class XModalAttentionDataset(Dataset):
     def __init__(self, image_path, text_chunks):
         self.image_files = [os.path.join(image_path, f) for f in os.listdir(image_path) if
@@ -26,10 +26,10 @@ class XModalAttentionDataset(Dataset):
         if len(self.image_files) != len(self.text_chunks):
             raise ValueError("Number of images and text chunks do not match")
 
-        # Define image transformations
+      
         self.transform = transforms.Compose([
-            transforms.Resize((720, 1280)),  # Resize to consistent dimensions
-            transforms.ToTensor(),  # Convert to tensor
+            transforms.Resize((720, 1280)),  
+            transforms.ToTensor(),  
         ])
 
     def __len__(self):
@@ -39,12 +39,12 @@ class XModalAttentionDataset(Dataset):
         image = Image.open(self.image_files[idx]).convert('RGB')
         text = self.text_chunks[idx]
 
-        # Apply transformations
+        
         image = self.transform(image)
         return image, text
 
 
-# Contrastive Loss definition with temperature
+
 class ContrastiveLoss(torch.nn.Module):
     def __init__(self, temperature=0.05):
         super(ContrastiveLoss, self).__init__()
@@ -57,7 +57,7 @@ class ContrastiveLoss(torch.nn.Module):
         return (loss_img + loss_txt) / 2
 
 
-# Hard negative mining function
+
 def hard_negative_mining(image_embeds, text_embeds, margin=0.2):
     similarity_matrix = cosine_similarity(image_embeds.detach().cpu().numpy(), text_embeds.detach().cpu().numpy())
     hard_negatives_img, hard_negatives_txt = [], []
@@ -71,13 +71,13 @@ def hard_negative_mining(image_embeds, text_embeds, margin=0.2):
                 break
 
     if len(hard_negatives_img) == 0 or len(hard_negatives_txt) == 0:
-        # If no hard negatives found, return original embeddings
+        
         return image_embeds, text_embeds
 
     return torch.stack(hard_negatives_img).to('cuda'), torch.stack(hard_negatives_txt).to('cuda')
 
 
-# Training function
+
 def train_model(image_path, text_chunks, model, processor, epochs=200, batch_size=16, lr=1e-5,
                 use_semi_hard_negative=False):
     dataset = XModalAttentionDataset(image_path, text_chunks)
@@ -97,20 +97,20 @@ def train_model(image_path, text_chunks, model, processor, epochs=200, batch_siz
 
             image_embeds, text_embeds = [], []
             for image, text in zip(images, texts):
-                # Process image embedding
+               
                 inputs = processor(images=image, text=text, return_tensors="pt").to('cuda')
                 outputs = model(**inputs, output_hidden_states=True)
                 image_embed = outputs.hidden_states[-1].mean(dim=1).squeeze().float()
                 image_embeds.append(image_embed)
 
-                # Process text embedding with gradient
+               
                 text_embed = torch.tensor(model_text.encode(text), requires_grad=True).float().to('cuda')
                 text_embeds.append(text_embed)
 
             image_embeds = torch.stack(image_embeds).to('cuda')
             text_embeds = torch.stack(text_embeds).to('cuda')
 
-            # Hard negative mining
+          
             hard_images, hard_texts = hard_negative_mining(image_embeds, text_embeds)
             similarity_matrix = torch.mm(F.normalize(hard_images, dim=-1), F.normalize(hard_texts, dim=-1).T)
             loss = criterion(similarity_matrix)
@@ -129,7 +129,7 @@ def train_model(image_path, text_chunks, model, processor, epochs=200, batch_siz
         "/home/wyj/0-Research_Projects/Retrieval-Augmented Autonomous Driving Corner Case Comprehension with Vision-Language Models/saved_blip/")
 
 
-# Load TXT file and split into chunks
+
 with open(
         "/home/wyj/0-Research_Projects/Retrieval-Augmented Autonomous Driving Corner Case Comprehension with Vision-Language Models/datasets/mini-internvl/sorted_Ours_mini_internvl_refined_desc.txt",
         "r") as file:
@@ -137,13 +137,13 @@ with open(
 
 
 def split_document_by_lines(text_lines):
-    return [line.rstrip('\n') for line in text_lines]  # Remove empty lines
+    return [line.rstrip('\n') for line in text_lines]  
 
 
 docs = split_document_by_lines(text_content)
 
 image_path = '/home/wyj/0-Research_Projects/Retrieval-Augmented Autonomous Driving Corner Case Comprehension with Vision-Language Models/datasets/mini-internvl/images_total/'
 
-# Start training
+
 train_model(image_path, docs, model_image_text, processor, lr=1e-5)
 
