@@ -30,52 +30,17 @@ Project Root Directory
 1. Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/project-name.git
+[git clone https://github.com/your-username/project-name.git](https://github.com/yjwangtj/RA-ADC.git)
 ```
 
 2. Navigate to the project directory and install dependencies:
 
 ```bash
-cd project-name
+cd /RA-ADC
 pip install -r requirements.txt
 ```
+### Notations
 
-### Running the Project
+1. The original dataset of images and the corresponding text descriptions should be replaced with yours.
 
-Use the following command to start the project:
-
-```bash
-python src/main.py
-```
-
-## Usage
-
-1. **Feature 1**: Explain how to use this feature.
-2. **Feature 2**: Explain how to use this feature.
-3. **Feature 3**: Explain how to use this feature.
-
-## Testing
-
-Run the following command to execute tests:
-
-```bash
-pytest tests/
-```
-
-## Contributing
-
-Contributions are welcome! If you have ideas or find issues, please submit an issue or pull request.
-
-Before contributing, please read the [CONTRIBUTING.md](CONTRIBUTING.md) to understand our contribution guidelines.
-
-## License
-
-This project is open-sourced under the [MIT License](LICENSE). See the LICENSE file for details.
-
-## Contact
-
-If you have any questions or suggestions, feel free to contact us:
-
-- Email: your_email@example.com
-- GitHub Issues: [Project Link](https://github.com/your-username/project-name/issues)
-
+2. The codes of using different VLMs to generate answers are not included in this repository, and the conda environment should be solely reconstructed.
