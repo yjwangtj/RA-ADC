@@ -11,10 +11,9 @@ This is a project about **Retrieval-Augmented Autonomous Driving Corner Case Com
 
 ```
 Project Root Directory
-├── src/                # Source code
-├── docs/               # Documentation
-├── tests/              # Test files
-├── data/               # Data files
+├── embedding_&_retrieving/                # Source code of embedding and retrieving
+├── fine-tuning/               # Source code of fine-tuning BLIP model
+├── evaluating/              # Source code of evaluation
 ├── requirements.txt    # Dependencies
 └── README.md           # Project description file
 ```
